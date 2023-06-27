@@ -38,9 +38,8 @@ metadata:
   namespace: hello-nodeport
 spec:
   ports:
-  - name: web
+  - name: http
     port: 80
-    protocol: http
     nodePort: 30036
   selector:
     app: hello-nodeport
