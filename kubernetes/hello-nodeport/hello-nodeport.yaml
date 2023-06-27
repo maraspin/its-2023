@@ -1,0 +1,47 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: hello-nodeport
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: hello-nodeport
+  name: hello-nodeport
+  namespace: hello-nodeport
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-nodeport
+  template:
+    metadata:
+      labels:
+        app: hello-nodeport
+    spec:
+      containers:
+      - image: nginxdemos/hello:0.2
+        name: hello
+        ports:
+        - containerPort: 80
+          name: web
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: hello-nodeport
+  name: hello-nodeport
+  namespace: hello-nodeport
+spec:
+  ports:
+  - name: web
+    port: 80
+    protocol: http
+    nodePort: 30036
+  selector:
+    app: hello-nodeport
+  type: NodePort
