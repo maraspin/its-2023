@@ -10,6 +10,7 @@ metadata:
   labels:
     app: hello-wicked
   name: hello-wicked
+  namespace: hello-wicked
 spec:
   replicas: 1
   selector:
@@ -34,6 +35,7 @@ metadata:
   labels:
     app: hello-wicked
   name: hello-wicked
+  namespace: hello-wicked
 spec:
   ports:
   - name: web
@@ -48,6 +50,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: hello-wicked
+  namespace: hello-wicked
 spec:
   ingressClassName: nginx
   rules:
