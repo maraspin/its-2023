@@ -1,0 +1,71 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: greetings-app
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: greetings-app
+  name: greetings-app
+  namespace: greetings-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: greetings-app
+  template:
+    metadata:
+      labels:
+        app: greetings-app
+    spec:
+      containers:
+      - image: greetings-app
+        name: greetings-app
+        ports:
+        - containerPort: 3000
+          name: web
+        env:
+        - name: GREETINGS
+          valueFrom:
+            configMapKeyRef:
+              name: greetings-config
+              key: greetings
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: greetings-app
+  name: greetings-app
+  namespace: greetings-app
+spec:
+  ports:
+  - name: web
+    port: 80
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    app: greetings-app
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: greetings-app
+  namespace: greetings-app
+spec:
+  rules:
+  - host: greetings.its
+    http:
+      paths:
+      - backend:
+          service:
+            name: greetings-app
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
